@@ -81,7 +81,8 @@ func (t *InterruptableThread) Start(ctx context.Context) {
 		wait.Add(1)
 	}
 	go func() {
-		logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil, "Starting: %s (thread)", name)
+		logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil, "Starting: %s (thread)",
+			name)
 
 		defer func() {
 			if pnc := recover(); pnc != nil {

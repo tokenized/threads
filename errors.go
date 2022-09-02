@@ -18,7 +18,9 @@ var (
 )
 
 func CombineErrors(errs ...error) error {
-	var list []error
+	var list []string
+	var notInterrupted []string
+	var only error
 	allWereInterrupted := true
 	for _, err := range errs {
 		if err == nil {
@@ -26,16 +28,13 @@ func CombineErrors(errs ...error) error {
 		}
 
 		if errors.Cause(err) != Interrupted {
+			notInterrupted = append(notInterrupted, err.Error())
 			allWereInterrupted = false
 		}
 
-		if len(list) == 0 {
-			list = []error{err} // set first
-			continue
-		}
-
 		// combine with previous
-		list = append(list, err)
+		list = append(list, err.Error())
+		only = err
 	}
 
 	if len(list) == 0 {
@@ -43,18 +42,13 @@ func CombineErrors(errs ...error) error {
 	}
 
 	if len(list) == 1 {
-		return list[0]
-	}
-
-	stringList := make([]string, len(list))
-	for i, err := range list {
-		stringList[i] = err.Error()
+		return only
 	}
 
 	if allWereInterrupted {
 		// All errors were interrupted so keep the parent type the same so it can be recognized.
-		return errors.Wrap(Interrupted, strings.Join(stringList, "|"))
+		return errors.Wrap(Interrupted, strings.Join(list, "|"))
 	}
 
-	return errors.Wrap(ErrCombined, strings.Join(stringList, "|"))
+	return errors.Wrap(ErrCombined, strings.Join(notInterrupted, "|"))
 }
