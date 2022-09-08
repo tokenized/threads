@@ -147,7 +147,7 @@ func (t *PeriodicThread) Start(ctx context.Context) {
 			logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil,
 				"Finished: %s (thread) : %s", name, err)
 		} else {
-			logger.LogDepthWithFields(ctx, logger.LevelWarn, caller, nil,
+			logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil,
 				"Finished: %s (thread): %s", name, err)
 		}
 	}()
