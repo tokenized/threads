@@ -84,7 +84,7 @@ func (t *PeriodicThread) Start(ctx context.Context) {
 		wait.Add(1)
 	}
 	go func() {
-		logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil, "Starting: %s (thread)",
+		logger.LogDepthWithFields(ctx, logger.LevelDebug, caller, nil, "Starting: %s (thread)",
 			name)
 
 		defer func() {
@@ -141,10 +141,10 @@ func (t *PeriodicThread) Start(ctx context.Context) {
 		}
 
 		if err == nil {
-			logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil,
+			logger.LogDepthWithFields(ctx, logger.LevelDebug, caller, nil,
 				"Finished: %s (thread)", name)
 		} else if errors.Cause(err) == Interrupted {
-			logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil,
+			logger.LogDepthWithFields(ctx, logger.LevelDebug, caller, nil,
 				"Finished: %s (thread) : %s", name, err)
 		} else {
 			logger.LogDepthWithFields(ctx, logger.LevelVerbose, caller, nil,
