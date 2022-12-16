@@ -15,9 +15,9 @@ import (
 // channel or connection.
 type UninterruptableFunction func(ctx context.Context) error
 
-// UnterruptableThread thread is a thread that is stopped by external means like closing a channel
+// UninterruptableThread thread is a thread that is stopped by external means like closing a channel
 // or connection.
-type UnterruptableThread struct {
+type UninterruptableThread struct {
 	name     string
 	function UninterruptableFunction
 
@@ -28,18 +28,18 @@ type UnterruptableThread struct {
 	lock       sync.Mutex
 }
 
-func NewUninterruptableThread(name string, function UninterruptableFunction) *UnterruptableThread {
-	return &UnterruptableThread{
+func NewUninterruptableThread(name string, function UninterruptableFunction) *UninterruptableThread {
+	return &UninterruptableThread{
 		name:     name,
 		function: function,
 	}
 }
 
 func NewUninterruptableThreadComplete(name string, function UninterruptableFunction,
-	wait *sync.WaitGroup) (*UnterruptableThread, <-chan error) {
+	wait *sync.WaitGroup) (*UninterruptableThread, <-chan error) {
 
 	complete := make(chan error, 1)
-	return &UnterruptableThread{
+	return &UninterruptableThread{
 		name:     name,
 		function: function,
 		complete: complete,
@@ -47,14 +47,14 @@ func NewUninterruptableThreadComplete(name string, function UninterruptableFunct
 	}, complete
 }
 
-func (t *UnterruptableThread) SetWait(wait *sync.WaitGroup) {
+func (t *UninterruptableThread) SetWait(wait *sync.WaitGroup) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
 	t.wait = wait
 }
 
-func (t *UnterruptableThread) GetCompleteChannel() <-chan error {
+func (t *UninterruptableThread) GetCompleteChannel() <-chan error {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
@@ -64,7 +64,7 @@ func (t *UnterruptableThread) GetCompleteChannel() <-chan error {
 	return complete
 }
 
-func (t *UnterruptableThread) Start(ctx context.Context) {
+func (t *UninterruptableThread) Start(ctx context.Context) {
 	t.lock.Lock()
 	name := t.name
 	function := t.function
@@ -131,14 +131,14 @@ func (t *UnterruptableThread) Start(ctx context.Context) {
 	}()
 }
 
-func (t *UnterruptableThread) IsComplete() bool {
+func (t *UninterruptableThread) IsComplete() bool {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
 	return t.isComplete
 }
 
-func (t *UnterruptableThread) Error() error {
+func (t *UninterruptableThread) Error() error {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
